@@ -21,7 +21,11 @@ class ChatChannel < ApplicationCable::Channel
 
   def create(message)
     result = Chat.create(message: message.fetch('message'))
-    data = { message: result, type: 'create' }
-    ActionCable.server.broadcast('chat_channel', data)
+    if result.save
+      data = { message: result, type: 'create' }
+      ActionCable.server.broadcast('chat_channel', data)
+    else
+      log.debug result.errors.full_messages
+    end
   end
 end
