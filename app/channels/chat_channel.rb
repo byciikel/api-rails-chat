@@ -11,7 +11,7 @@ class ChatChannel < ApplicationCable::Channel
   def history
     id = Chat.all.collect(&:id)
     chats = Chat.all.collect(&:message)
-    created_at = Chat.all.collect(&:create_at)
+    created_at = Chat.all.collect(&:created_at)
 
     messages = { id: id, created_at: created_at, message: messages }
 
