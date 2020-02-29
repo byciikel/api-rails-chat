@@ -9,7 +9,12 @@ class ChatChannel < ApplicationCable::Channel
   end
 
   def history
-    messages = Chat.all.collect(&:message)
+    id = Chat.all.collect(&:id)
+    chats = Chat.all.collect(&:message)
+    created_at = Chat.all.collect(&:create_at)
+
+    messages = { id: id, created_at: created_at, message: messages }
+
     data = { message: messages, type: 'history' }
     ActionCable.server.broadcast('chat_channel', data)
   end
