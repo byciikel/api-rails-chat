@@ -1,6 +1,7 @@
 class ChatChannel < ApplicationCable::Channel
   def subscribed
     # stream_from "some_channel"
+    stream_from 'chat_channel'
   end
 
   def unsubscribed
@@ -8,13 +9,13 @@ class ChatChannel < ApplicationCable::Channel
   end
 
   def history
-    messages = ChatChannel.all.collect(&:message)
+    messages = Chat.all.collect(&:message)
     data = { message: messages, type: 'history' }
     ActionCable.server.broadcast('chat_channel', data)
   end
 
   def create(message)
-    result = ChatChannel.create(message: message.fetch('message'))
+    result = Chat.create(message: message.fetch('message'))
     data = { message: result, type: 'create' }
     ActionCable.server.broadcast('chat_channel', data)
   end
